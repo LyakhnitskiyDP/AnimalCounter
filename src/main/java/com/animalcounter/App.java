@@ -1,13 +1,8 @@
 package com.animalcounter;
 
-import com.animalcounter.entities.Animal;
 import com.animalcounter.parsers.ArgumentParser;
-import com.animalcounter.parsers.RuleParser;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
 
 public class App {
 
@@ -15,8 +10,17 @@ public class App {
 
         Map<String, String> configs = ArgumentParser.getConfigs(args);
 
-        AppRunner.run(configs);
+        long startTime = System.nanoTime();
 
+        if (configs.containsKey("generationNumber")) {
+            GenerationRunner.generateAnimals(configs);
+        } else {
+            AppRunner.run(configs);
+        }
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Time of execution: " + ((endTime - startTime) / 1_000_000 ) + "ms");
     }
 
 }

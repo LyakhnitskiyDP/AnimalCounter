@@ -20,6 +20,9 @@ public class ArgumentParser {
                 case "-rules":
                     configs.put("pathToRules", System.getProperty("user.dir") + System.getProperty("file.separator") + args[++i]);
                     break;
+                case "-generate":
+                    configs.put("generationNumber", args[++i]);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument " + args[i]);
             }

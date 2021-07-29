@@ -16,9 +16,11 @@ public class AppRunner {
         Map<String, Predicate<Animal>> animalPredicates =
                 initAnimalPredicates(configs.get("pathToRules"));
 
-        List<Animal> animals = initAnimals(configs.get("pathToAnimals"));
+        List<Animal> animals =
+                initAnimals(configs.get("pathToAnimals"));
 
-        Map<String, Integer> resultMap = initResultMap(animalPredicates.keySet());
+        Map<String, Integer> resultMap =
+                initResultMap(animalPredicates.keySet());
 
         for (Animal animal : animals) {
 
@@ -41,6 +43,7 @@ public class AppRunner {
 
         ConsoleConsumer.printInTable(resultMap);
     }
+
 
     private static Map<String, Predicate<Animal>> initAnimalPredicates(String pathToRules) {
 
