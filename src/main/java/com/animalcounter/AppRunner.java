@@ -1,11 +1,11 @@
 package com.animalcounter;
 
 import com.animalcounter.entities.Animal;
+import com.animalcounter.parsers.AnimalParser;
+import com.animalcounter.parsers.RuleParser;
+import com.animalcounter.utils.FileUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class AppRunner {
@@ -18,6 +18,9 @@ public class AppRunner {
 
         //Init animals
         List<Animal> animals = initAnimals(configs.get("pathToAnimals"));
+
+        System.out.println("Animals");
+        animals.forEach(System.out::println);
 
         Map<String, Integer> resultMap = initResultMap(animalPredicates.keySet());
         //Traverse through animals, apply each predicate, and count occurrences
@@ -40,6 +43,7 @@ public class AppRunner {
                             );
         }
 
+        System.out.println("Results: ");
         resultMap.forEach(
                 (k, v) -> System.out.println(k + " : " + v)
         );
@@ -48,11 +52,25 @@ public class AppRunner {
 
     private static Map<String, Predicate<Animal>> initAnimalPredicates(String pathToRules) {
 
+        Map<String, Predicate<Animal>> predicates = new HashMap<>();
 
+        FileUtil.readFile(pathToRules,
+                line -> predicates.put(line, RuleParser.getPredicate(line))
+        );
+
+        return predicates;
     }
 
     private static List<Animal> initAnimals(String path) {
 
+        List<Animal> animals = new ArrayList<>();
+
+        FileUtil.readFile(
+                path,
+                line -> animals.add(AnimalParser.parseString(line))
+        );
+
+        return animals;
     }
 
     private static Map<String, Integer> initResultMap(Set<String> keys) {

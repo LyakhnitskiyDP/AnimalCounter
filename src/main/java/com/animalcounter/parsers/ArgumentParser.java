@@ -1,5 +1,6 @@
 package com.animalcounter.parsers;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,10 +15,10 @@ public class ArgumentParser {
             switch (args[i]) {
 
                 case "-animals":
-                    configs.put("pathToAnimals", args[++i]);
+                    configs.put("pathToAnimals", System.getProperty("user.dir") + System.getProperty("file.separator") + args[++i]);
                     break;
                 case "-rules":
-                    configs.put("pathToRules", args[++i]);
+                    configs.put("pathToRules", System.getProperty("user.dir") + System.getProperty("file.separator") + args[++i]);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument " + args[i]);

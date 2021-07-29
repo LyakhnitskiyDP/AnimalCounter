@@ -13,12 +13,9 @@ public class App {
 
     public static void main(String[] args) {
 
-        Map<String, String> configs = ArgumentParser.getConfigs(
-            "-animals", "resources/animals.csv",
-                "-rules", "resources/rules.txt"
-        );
+        Map<String, String> configs = ArgumentParser.getConfigs(args);
 
-        configs.entrySet().stream().forEach(e -> System.out.println(e.getKey() + " ::: " + e.getValue()));
+        AppRunner.run(configs);
 
     }
 
