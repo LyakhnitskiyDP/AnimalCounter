@@ -1,0 +1,1 @@
+![diagram](animal_counter_diagram.svg)
