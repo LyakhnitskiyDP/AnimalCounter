@@ -1,5 +1,6 @@
 package com.animalcounter;
 
+import com.animalcounter.consumers.ConsoleConsumer;
 import com.animalcounter.entities.Animal;
 import com.animalcounter.parsers.AnimalParser;
 import com.animalcounter.parsers.RuleParser;
@@ -12,18 +13,12 @@ public class AppRunner {
 
     public static void run(Map<String, String> configs) {
 
-        //Init predicates
         Map<String, Predicate<Animal>> animalPredicates =
                 initAnimalPredicates(configs.get("pathToRules"));
 
-        //Init animals
         List<Animal> animals = initAnimals(configs.get("pathToAnimals"));
 
-        System.out.println("Animals");
-        animals.forEach(System.out::println);
-
         Map<String, Integer> resultMap = initResultMap(animalPredicates.keySet());
-        //Traverse through animals, apply each predicate, and count occurrences
 
         for (Animal animal : animals) {
 
@@ -43,11 +38,8 @@ public class AppRunner {
                             );
         }
 
-        System.out.println("Results: ");
-        resultMap.forEach(
-                (k, v) -> System.out.println(k + " : " + v)
-        );
 
+        ConsoleConsumer.printInTable(resultMap);
     }
 
     private static Map<String, Predicate<Animal>> initAnimalPredicates(String pathToRules) {
