@@ -1,8 +1,11 @@
 package com.animalcounter;
 
 import com.animalcounter.entities.Animal;
+import com.animalcounter.parsers.ArgumentParser;
 import com.animalcounter.parsers.RuleParser;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -10,14 +13,12 @@ public class App {
 
     public static void main(String[] args) {
 
-        Animal animal = new Animal();
-        animal.setCharacteristics(
-                Set.of("ЛЕГКОЕ", "НЕВЫСОКОЕ", "ВСЕЯДНОЕ")
+        Map<String, String> configs = ArgumentParser.getConfigs(
+            "-animals", "resources/animals.csv",
+                "-rules", "resources/rules.txt"
         );
 
-        Predicate<Animal> animalPredicate = RuleParser.getPredicate("ВСЕЯДНОЕ && НЕВЫСОКОЕ && ЛЕГКОЕ");
-
-        System.out.println(animalPredicate.test(animal));
+        configs.entrySet().stream().forEach(e -> System.out.println(e.getKey() + " ::: " + e.getValue()));
 
     }
 

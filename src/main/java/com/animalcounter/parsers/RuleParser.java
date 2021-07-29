@@ -14,7 +14,7 @@ public class RuleParser {
     public static Predicate<Animal> getPredicate(String rule) {
 
         String[] ruleParts = rule.split(" ");
-        Predicate<Animal> predicate = a -> true;
+        Predicate<Animal> predicate = null;
 
         String logicalOperand = "";
 
@@ -28,28 +28,32 @@ public class RuleParser {
 
                 if (logicalOperand.isBlank() || logicalOperand.equals(LOGICAL_AND)) {
 
+                    if (predicate == null) predicate = x -> true;
+
                     if (isNegated(rulePart)) {
                         predicate = predicate.and(
                                 animal -> animal.getCharacteristics()
-                                        .stream()
-                                        .noneMatch(trait -> trait.equals(rulePart))
+                                                .stream()
+                                                .noneMatch(trait -> trait.equals(rulePart.substring(1)))
                         );
                     } else {
                         predicate = predicate.and(
                                 animal -> animal.getCharacteristics()
-                                        .stream()
-                                        .anyMatch(trait -> trait.equals(rulePart))
+                                                .stream()
+                                                .anyMatch(trait -> trait.equals(rulePart))
                         );
                     }
 
                 } else if (logicalOperand.equals(LOGICAL_OR)) {
 
+                    if (predicate == null) predicate = x -> false;
+
                     if (isNegated(rulePart)) {
 
                         predicate = predicate.or(
                                 animal -> animal.getCharacteristics()
                                                 .stream()
-                                                .anyMatch(trait -> trait.equals(rulePart))
+                                                .noneMatch(trait -> trait.equals(rulePart.substring(1)))
                         );
 
                     } else {
@@ -57,7 +61,7 @@ public class RuleParser {
                         predicate = predicate.or(
                                 animal -> animal.getCharacteristics()
                                                 .stream()
-                                                .noneMatch(trait -> trait.equals(rulePart))
+                                                .anyMatch(trait -> trait.equals(rulePart))
                         );
                     }
                 }
