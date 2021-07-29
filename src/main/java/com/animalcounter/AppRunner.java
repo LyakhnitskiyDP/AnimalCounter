@@ -2,6 +2,7 @@ package com.animalcounter;
 
 import com.animalcounter.consumers.ConsoleConsumer;
 import com.animalcounter.entities.Animal;
+import com.animalcounter.filters.AnimalFilter;
 import com.animalcounter.parsers.AnimalParser;
 import com.animalcounter.parsers.RuleParser;
 import com.animalcounter.utils.FileUtil;
@@ -19,27 +20,9 @@ public class AppRunner {
         List<Animal> animals =
                 initAnimals(configs.get("pathToAnimals"));
 
-        Map<String, Integer> resultMap =
-                initResultMap(animalPredicates.keySet());
+        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
 
-        for (Animal animal : animals) {
-
-            animalPredicates.entrySet()
-                            .stream()
-                            .forEach(
-                                    predicateEntry -> {
-
-                                        if (predicateEntry.getValue().test(animal)) {
-                                            resultMap.put(
-                                                    predicateEntry.getKey(),
-                                                    resultMap.get(predicateEntry.getKey()) + 1
-                                            );
-                                        }
-
-                                    }
-                            );
-        }
-
+        Map<String, Integer> resultMap = animalFilter.getResultMap();
 
         ConsoleConsumer.printInTable(resultMap);
     }
@@ -68,12 +51,5 @@ public class AppRunner {
         return animals;
     }
 
-    private static Map<String, Integer> initResultMap(Set<String> keys) {
-
-        Map<String, Integer> resultMap = new HashMap<>();
-        keys.forEach(key -> resultMap.put(key, 0));
-
-        return resultMap;
-    }
 
 }

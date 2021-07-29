@@ -11,9 +11,9 @@ public class ConsoleConsumer {
         resultMap.forEach(
                 (k, v) -> {
                     System.out.print("|");
-                    System.out.print(rightPadding(" " + k, 42));
+                    System.out.print(rightPadding(" " + k, 50));
                     System.out.print("|");
-                    System.out.print(leftPadding(v.toString() + " ", 44));
+                    System.out.print(leftPadding(v.toString() + " ", 36));
                     System.out.print("|");
                     System.out.println();
                 }
