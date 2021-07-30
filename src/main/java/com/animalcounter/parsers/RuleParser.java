@@ -6,72 +6,43 @@ import java.util.function.Predicate;
 
 public class RuleParser {
 
-    public static final String LOGICAL_AND = "&&";
-    public static final String LOGICAL_OR = "||";
     public static final String LOGICAL_NOT = "!";
 
     public static Predicate<Animal> getPredicate(String rule) {
 
-        String[] ruleParts = rule.split(" ");
-        Predicate<Animal> predicate = null;
+        Predicate<Animal> predicate = x -> true;
 
-        String logicalOperand = "";
+        String[] andRules = rule.split("&&");
 
-        for (String rulePart : ruleParts ) {
-
-            if (isLogicalOperand(rulePart)) {
-
-                logicalOperand = rulePart;
-
-            } else {
-
-                if (logicalOperand.isBlank() || logicalOperand.equals(LOGICAL_AND)) {
-
-                    if (predicate == null) predicate = x -> true;
-
-                    if (isNegated(rulePart)) {
-                        predicate = predicate.and(
-                                animal -> animal.getCharacteristics()
-                                                .stream()
-                                                .noneMatch(trait -> trait.equals(rulePart.substring(1)))
-                        );
-                    } else {
-                        predicate = predicate.and(
-                                animal -> animal.getCharacteristics()
-                                                .stream()
-                                                .anyMatch(trait -> trait.equals(rulePart))
-                        );
-                    }
-
-                } else if (logicalOperand.equals(LOGICAL_OR)) {
-
-                    if (predicate == null) predicate = x -> false;
-
-                    if (isNegated(rulePart)) {
-
-                        predicate = predicate.or(
-                                animal -> animal.getCharacteristics()
-                                                .stream()
-                                                .noneMatch(trait -> trait.equals(rulePart.substring(1)))
-                        );
-
-                    } else {
-
-                        predicate = predicate.or(
-                                animal -> animal.getCharacteristics()
-                                                .stream()
-                                                .anyMatch(trait -> trait.equals(rulePart))
-                        );
-                    }
-                }
-            }
+        for (String andRule : andRules) {
+            predicate = predicate.and(
+                    getSubPredicate(andRule)
+            );
         }
 
         return predicate;
     }
 
-    private static boolean isLogicalOperand(String token) {
-        return token.equals(LOGICAL_AND) || token.equals(LOGICAL_OR);
+    private static Predicate<Animal> getSubPredicate(String subRule) {
+
+        Predicate<Animal> subPredicate = x -> false;
+
+        String[] basicRules = subRule.split("\\|\\|");
+        for (String basicRule : basicRules) {
+            subPredicate = subPredicate.or(getBasicPredicate(basicRule));
+        }
+
+        return subPredicate;
+    }
+
+    private static Predicate<Animal> getBasicPredicate(String basicRule) {
+
+        Predicate<Animal> basicPredicate =
+                animal -> isNegated(basicRule) ?
+                            animal.lacksCharacteristic(basicRule.substring(1)) :
+                            animal.hasCharacteristic(basicRule);
+
+        return basicPredicate;
     }
 
     private static boolean isNegated(String token) {

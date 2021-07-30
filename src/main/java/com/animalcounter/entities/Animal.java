@@ -15,4 +15,12 @@ public class Animal {
 
     private Set<String> characteristics;
 
+    public boolean hasCharacteristic(String characteristic) {
+        return this.characteristics.contains(characteristic);
+    }
+
+    public boolean lacksCharacteristic(String characteristic) {
+        return ! this.hasCharacteristic(characteristic);
+    }
+
 }

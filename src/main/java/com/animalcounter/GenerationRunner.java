@@ -28,12 +28,12 @@ public class GenerationRunner {
 
         FileUtil.writeToFile(
                 pathToAnimalFile,
-                getAnimalSupplier(generationNumber)
+                getAnimals(generationNumber)
         );
     }
 
-    public static Supplier<String> getAnimalSupplier(int number) {
-        return () -> {
+    public static String getAnimals(int number) {
+
             StringBuilder animalsStrBuilder = new StringBuilder();
 
             for (int i = 0; i < number; i++) {
@@ -47,7 +47,6 @@ public class GenerationRunner {
             }
 
             return animalsStrBuilder.toString();
-        };
     }
 
     private static String getRandomElement(String[] elements) {

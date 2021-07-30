@@ -19,11 +19,11 @@ public class RuleParserTest {
         ));
 
         Predicate<Animal> truthyPredicate = RuleParser.getPredicate(
-                "ЛЕГКОЕ && МАЛЕНЬКОЕ && ВСЕЯДНОЕ"
+                "ЛЕГКОЕ&&МАЛЕНЬКОЕ&&ВСЕЯДНОЕ"
         );
 
         Predicate<Animal> falsePredicate = RuleParser.getPredicate(
-                "ЛЕГКОЕ && НЕВЫСОКОЕ && ВСЕЯДНОЕ"
+                "ЛЕГКОЕ&&НЕВЫСОКОЕ&&ВСЕЯДНОЕ"
         );
 
         Assertions.assertTrue(truthyPredicate.test(animalToTest));
@@ -40,11 +40,11 @@ public class RuleParserTest {
         ));
 
         Predicate<Animal> truthyPredicate = RuleParser.getPredicate(
-                "ТЯЖЕЛОЕ || НЕВЫСОКОЕ"
+                "ТЯЖЕЛОЕ||НЕВЫСОКОЕ"
         );
 
         Predicate<Animal> falsePredicate = RuleParser.getPredicate(
-                "ЛЕГКОЕ || НЕВЫСОКОЕ"
+                "ЛЕГКОЕ||НЕВЫСОКОЕ"
         );
 
         Assertions.assertTrue(truthyPredicate.test(animalToTest));
@@ -61,11 +61,11 @@ public class RuleParserTest {
         ));
 
         Predicate<Animal> truthyPredicate = RuleParser.getPredicate(
-                "!ТЯЖЕЛОЕ && !МАЛЕНЬКОЕ && !ПЛОТОЯДНОЕ"
+                "!ТЯЖЕЛОЕ&&!МАЛЕНЬКОЕ&&!ПЛОТОЯДНОЕ"
         );
 
         Predicate<Animal> falsePredicate = RuleParser.getPredicate(
-                "!ЛЕГКОЕ && !НЕВЫСОКОЕ && !ВСЕЯДНОЕ"
+                "!ЛЕГКОЕ&&!НЕВЫСОКОЕ&&!ВСЕЯДНОЕ"
         );
 
         Assertions.assertTrue(truthyPredicate.test(animalToTest));
@@ -85,11 +85,11 @@ public class RuleParserTest {
             ));
 
             Predicate<Animal> truthyPredicate = RuleParser.getPredicate(
-                    "СРЕДНЕЕ || ТЯЖЕЛОЕ && !МАЛЕНЬКОЕ && ВСЕЯДНОЕ"
+                    "СРЕДНЕЕ||ТЯЖЕЛОЕ&&!МАЛЕНЬКОЕ&&ВСЕЯДНОЕ"
             );
 
             Predicate<Animal> falsePredicate = RuleParser.getPredicate(
-                    "!ТЯЖЕЛОЕ && ВЫСОКОЕ || НЕВЫСОКОЕ"
+                    "!ТЯЖЕЛОЕ&&ВЫСОКОЕ||НЕВЫСОКОЕ"
             );
 
             Assertions.assertTrue(truthyPredicate.test(animalToTest));
