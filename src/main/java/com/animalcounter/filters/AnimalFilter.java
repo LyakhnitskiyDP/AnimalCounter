@@ -1,7 +1,6 @@
 package com.animalcounter.filters;
 
 import com.animalcounter.entities.Animal;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,32 +8,33 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-@RequiredArgsConstructor
 public class AnimalFilter {
 
     private final List<Animal> animals;
-
     private final Map<String, Predicate<Animal>> animalPredicates;
+    private final Map<String, Integer> resultMap;
 
-    public Map<String, Integer> getResultMap() {
+    public AnimalFilter(
+            List<Animal> animals,
+            Map<String, Predicate<Animal>> animalPredicates) {
 
-        Map<String, Integer> resultMap =
-                initResultMap(animalPredicates.keySet());
+        this.animals = animals;
+        this.animalPredicates = animalPredicates;
+        this.resultMap = initResultMap(animalPredicates.keySet());
+    }
+
+    public Map<String, Integer> sortAnimals() {
 
         for (Animal animal : animals) {
 
-            animalPredicates.entrySet()
-                    .stream()
-                    .forEach(
-                            predicateEntry -> {
-                                if (predicateEntry.getValue().test(animal)) {
-                                    resultMap.put(
-                                            predicateEntry.getKey(),
-                                            resultMap.get(predicateEntry.getKey()) + 1
-                                    );
-                                }
-                            }
-                    );
+            animalPredicates.forEach(
+                    (key, value) -> {
+                        if (value.test(animal)) {
+                            resultMap.put(key, resultMap.get(key) + 1);
+                        }
+                    }
+            );
+
         }
 
         return resultMap;

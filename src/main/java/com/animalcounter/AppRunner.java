@@ -1,5 +1,6 @@
 package com.animalcounter;
 
+import com.animalcounter.configs.AppConfigs;
 import com.animalcounter.consumers.ConsoleConsumer;
 import com.animalcounter.entities.Animal;
 import com.animalcounter.filters.AnimalFilter;
@@ -12,39 +13,44 @@ import java.util.function.Predicate;
 
 public class AppRunner {
 
-    public static void run(Map<String, String> configs) {
+    private final AnimalFilter animalFilter;
 
-        Map<String, Predicate<Animal>> animalPredicates =
-                initAnimalPredicates(configs.get("pathToRules"));
+    public AppRunner(AppConfigs configs) {
 
-        List<Animal> animals =
-                initAnimals(configs.get("pathToAnimals"));
+        Map<String, Predicate<Animal>> animalPredicates = initAnimalPredicates(configs);
+        List<Animal> animals = initAnimals(configs);
 
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
+        this.animalFilter = new AnimalFilter(animals, animalPredicates);
+    }
 
-        Map<String, Integer> resultMap = animalFilter.getResultMap();
+    public void run() {
+
+        Map<String, Integer> resultMap = animalFilter.sortAnimals();
 
         ConsoleConsumer.printInTable(resultMap);
     }
 
 
-    private static Map<String, Predicate<Animal>> initAnimalPredicates(String pathToRules) {
+    private Map<String, Predicate<Animal>> initAnimalPredicates(AppConfigs appConfigs) {
 
+        String pathToRules = appConfigs.getConfigFor(AppConfigs.PATH_TO_RULE_FILE);
         Map<String, Predicate<Animal>> predicates = new HashMap<>();
 
-        FileUtil.readFile(pathToRules,
+        FileUtil.readFile(
+                pathToRules,
                 line -> predicates.put(line, RuleParser.getPredicate(line))
         );
 
         return predicates;
     }
 
-    private static List<Animal> initAnimals(String path) {
+    private List<Animal> initAnimals(AppConfigs appConfigs) {
 
+        String pathToAnimalFile = appConfigs.getConfigFor(AppConfigs.PATH_TO_ANIMAL_FILE);
         List<Animal> animals = new ArrayList<>();
 
         FileUtil.readFile(
-                path,
+                pathToAnimalFile,
                 line -> animals.add(AnimalParser.parseString(line))
         );
 

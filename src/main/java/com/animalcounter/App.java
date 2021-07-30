@@ -1,26 +1,42 @@
 package com.animalcounter;
 
+import com.animalcounter.configs.AppConfigs;
 import com.animalcounter.parsers.ArgumentParser;
 
-import java.util.Map;
 
 public class App {
 
     public static void main(String[] args) {
 
-        Map<String, String> configs = ArgumentParser.getConfigs(args);
+        AppConfigs appConfigs = ArgumentParser.getConfigs(args);
 
-        long startTime = System.nanoTime();
-
-        if (configs.containsKey("generationNumber")) {
-            GenerationRunner.generateAnimals(configs);
-        } else {
-            AppRunner.run(configs);
+        if (appConfigs.hasConfigFor(AppConfigs.GENERATION_NUMBER)) {
+            runGenerator(appConfigs);
         }
 
-        long endTime = System.nanoTime();
+        runSortingApp(appConfigs);
+    }
 
-        System.out.println("Time of execution: " + ((endTime - startTime) / 1_000_000 ) + "ms");
+    private static void runGenerator(AppConfigs appConfigs) {
+        long startTime = System.nanoTime();
+
+        new GenerationRunner(appConfigs).generateAnimals();
+
+        long endTime = System.nanoTime();
+        System.out.println("Time of animal generation: " + getPeriodInMs(startTime, endTime) + "ms");
+    }
+
+    private static void runSortingApp(AppConfigs appConfigs) {
+        long startTime = System.nanoTime();
+
+        new AppRunner(appConfigs).run();
+
+        long endTime = System.nanoTime();
+        System.out.println("Time of execution: " + getPeriodInMs(startTime, endTime) + "ms");
+    }
+
+    private static long getPeriodInMs(long startTime, long endTime) {
+        return (endTime - startTime) / 1_000_000;
     }
 
 }

@@ -1,6 +1,11 @@
 package com.animalcounter.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -10,7 +15,10 @@ public class FileUtil {
             String pathToFile,
             Consumer<String> callback) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToFile))) {
+        try (
+                FileReader fileReader = new FileReader(pathToFile);
+                BufferedReader reader = new BufferedReader(fileReader)
+        ) {
 
             String line;
 
@@ -27,7 +35,10 @@ public class FileUtil {
 
     public static void writeToFile(String pathToFile, Supplier<String> supplier) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
+        try (
+                FileWriter fileWriter = new FileWriter(pathToFile);
+                BufferedWriter writer = new BufferedWriter(fileWriter)
+        ) {
 
             writer.write(supplier.get());
 

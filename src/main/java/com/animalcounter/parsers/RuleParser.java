@@ -1,7 +1,6 @@
 package com.animalcounter.parsers;
 
 import com.animalcounter.entities.Animal;
-import com.sun.jdi.connect.Connector;
 
 import java.util.function.Predicate;
 
