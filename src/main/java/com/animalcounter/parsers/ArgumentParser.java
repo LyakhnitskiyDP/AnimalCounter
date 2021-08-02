@@ -2,6 +2,8 @@ package com.animalcounter.parsers;
 
 import com.animalcounter.configs.AppConfigs;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ public class ArgumentParser {
                 case "-rules" -> configMap.put(AppConfigs.PATH_TO_RULE_FILE, getAbsolutePath() + args[++i]);
 
                 case "-generate" -> configMap.put(AppConfigs.GENERATION_NUMBER, args[++i]);
+
+                case "-multithreaded" -> configMap.put(AppConfigs.CONCURRENT_MODE, "true");
 
                 default -> throw new IllegalArgumentException("Unknown argument " + args[i]);
             }

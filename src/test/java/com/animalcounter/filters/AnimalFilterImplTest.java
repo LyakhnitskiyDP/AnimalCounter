@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class AnimalFilterTest {
+public class AnimalFilterImplTest {
     private static String[] WEIGHT = {"ЛЕГКОЕ", "СРЕДНЕЕ", "ТЯЖЕЛОЕ"};
     private static String[] HEIGHT = {"МАЛЕНЬКОЕ", "НЕВЫСОКОЕ", "ВЫСОКОЕ"};
     private static String[] TYPE = {"ТРАВОЯДНОЕ", "ПЛОТОЯДНОЕ", "ВСЕЯДНОЕ"};
@@ -50,8 +50,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 9,
@@ -96,8 +96,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 18,
@@ -144,8 +144,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 9,
@@ -173,8 +173,8 @@ public class AnimalFilterTest {
                "ЛЕГКОЕ", RuleParser.getPredicate("ЛЕГКОЕ"),
                "МАЛЕНЬКОЕ", RuleParser.getPredicate("МАЛЕНЬКОЕ")
        );
-       AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-       Map<String, Integer> resultMap = animalFilter.sortAnimals();
+       AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+       Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
        Map<String, Integer> expectedMap = Map.of(
                "ТРАВОЯДНОЕ", 100,
@@ -220,8 +220,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 33,
@@ -267,8 +267,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 50,
@@ -314,8 +314,8 @@ public class AnimalFilterTest {
                 rules[1], RuleParser.getPredicate(rules[1]),
                 rules[2], RuleParser.getPredicate(rules[2])
         );
-        AnimalFilter animalFilter = new AnimalFilter(animals, animalPredicates);
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        AnimalFilterImpl animalFilterImpl = new AnimalFilterImpl(animalPredicates);
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         Map<String, Integer> expectedMap = Map.of(
                 rules[0], 0,

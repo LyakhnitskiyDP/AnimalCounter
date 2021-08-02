@@ -2,9 +2,20 @@ package com.animalcounter;
 
 import com.animalcounter.configs.AppConfigs;
 import com.animalcounter.parsers.ArgumentParser;
+import com.animalcounter.runners.BufferedAppRunner;
+import com.animalcounter.runners.ConcurrentBufferedAppRunner;
+import com.animalcounter.runners.GenerationRunner;
+import com.animalcounter.runners.MetricProxyRunner;
+import com.animalcounter.runners.Runner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
 
 
 public class App {
+
+    private static final Logger log = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
 
@@ -18,25 +29,38 @@ public class App {
     }
 
     private static void runGenerator(AppConfigs appConfigs) {
-        long startTime = System.nanoTime();
 
-        new GenerationRunner(appConfigs).generateAnimals();
+        GenerationRunner generationRunner = new GenerationRunner(appConfigs);
+        Consumer<Long> metricsConsumer =
+                timePassed -> log.info("Time of animal generation: {}ms", timePassed);
 
-        long endTime = System.nanoTime();
-        System.out.println("Time of animal generation: " + getPeriodInMs(startTime, endTime) + "ms");
+        runWithTimeMeasuring(generationRunner, metricsConsumer);
     }
 
     private static void runSortingApp(AppConfigs appConfigs) {
-        long startTime = System.nanoTime();
 
-        new AppRunner(appConfigs).run();
+        Runner sortingAppRunner;
 
-        long endTime = System.nanoTime();
-        System.out.println("Time of execution: " + getPeriodInMs(startTime, endTime) + "ms");
+        if (appConfigs.hasConfigFor(AppConfigs.CONCURRENT_MODE)) {
+            sortingAppRunner = new ConcurrentBufferedAppRunner(appConfigs);
+        } else {
+            sortingAppRunner = new BufferedAppRunner(appConfigs);
+        }
+
+        Consumer<Long> metricsConsumer =
+                timePassed -> log.info("Time of sorting app execution: {}ms", timePassed);
+
+        runWithTimeMeasuring(sortingAppRunner, metricsConsumer);
     }
 
-    private static long getPeriodInMs(long startTime, long endTime) {
-        return (endTime - startTime) / 1_000_000;
+    private static void runWithTimeMeasuring(
+            Runner runner,
+            Consumer<Long> timePassedConsumer) {
+
+        MetricProxyRunner metricProxyRunner =
+                new MetricProxyRunner(runner, timePassedConsumer);
+        metricProxyRunner.run();
     }
+
 
 }

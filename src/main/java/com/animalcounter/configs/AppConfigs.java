@@ -1,8 +1,5 @@
 package com.animalcounter.configs;
 
-import lombok.Data;
-import lombok.Setter;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -11,6 +8,7 @@ public class AppConfigs {
     public static final String PATH_TO_ANIMAL_FILE = "pathToAnimals";
     public static final String PATH_TO_RULE_FILE = "pathToRules";
     public static final String GENERATION_NUMBER = "generationNumber";
+    public static final String CONCURRENT_MODE = "concurrentMode";
 
     private final Map<String, String> configMap;
 

@@ -1,9 +1,9 @@
-package com.animalcounter;
+package com.animalcounter.runners;
 
 import com.animalcounter.configs.AppConfigs;
 import com.animalcounter.consumers.ConsoleConsumer;
 import com.animalcounter.entities.Animal;
-import com.animalcounter.filters.AnimalFilter;
+import com.animalcounter.filters.AnimalFilterImpl;
 import com.animalcounter.parsers.AnimalParser;
 import com.animalcounter.parsers.RuleParser;
 import com.animalcounter.utils.FileUtil;
@@ -11,21 +11,24 @@ import com.animalcounter.utils.FileUtil;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class AppRunner {
+@Deprecated
+public class AppRunner implements Runner {
 
-    private final AnimalFilter animalFilter;
+    private final AnimalFilterImpl animalFilterImpl;
+    private  final List<Animal> animals;
 
     public AppRunner(AppConfigs configs) {
 
         Map<String, Predicate<Animal>> animalPredicates = initAnimalPredicates(configs);
-        List<Animal> animals = initAnimals(configs);
+        animals = initAnimals(configs);
 
-        this.animalFilter = new AnimalFilter(animals, animalPredicates);
+        this.animalFilterImpl = new AnimalFilterImpl(animalPredicates);
     }
 
+    @Override
     public void run() {
 
-        Map<String, Integer> resultMap = animalFilter.sortAnimals();
+        Map<String, Integer> resultMap = animalFilterImpl.sortAnimals(animals);
 
         ConsoleConsumer.printInTable(resultMap);
     }
@@ -36,8 +39,7 @@ public class AppRunner {
         String pathToRules = appConfigs.getConfigFor(AppConfigs.PATH_TO_RULE_FILE);
         Map<String, Predicate<Animal>> predicates = new HashMap<>();
 
-        FileUtil.readFile(
-                pathToRules,
+        new FileUtil(pathToRules).readFile(
                 line -> predicates.put(line, RuleParser.getPredicate(line))
         );
 
@@ -49,8 +51,7 @@ public class AppRunner {
         String pathToAnimalFile = appConfigs.getConfigFor(AppConfigs.PATH_TO_ANIMAL_FILE);
         List<Animal> animals = new ArrayList<>();
 
-        FileUtil.readFile(
-                pathToAnimalFile,
+        new FileUtil(pathToAnimalFile).readFile(
                 line -> animals.add(AnimalParser.parseString(line))
         );
 
