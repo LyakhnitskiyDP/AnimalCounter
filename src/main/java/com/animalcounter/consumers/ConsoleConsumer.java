@@ -35,7 +35,8 @@ public class ConsoleConsumer {
         for (int i = 0; i < ( (width / 2) - 4); i++) strBuilder.append("-");
         strBuilder.append("RESULTS");
         for (int i = 0; i < ( (width / 2) - 5); i++) strBuilder.append("-");
-        strBuilder.append("+\n");
+        strBuilder.append("+");
+        strBuilder.append(System.lineSeparator());
 
         return strBuilder.toString();
     }
@@ -55,7 +56,8 @@ public class ConsoleConsumer {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("+");
         for (int i = 0; i < width - 2; i++) strBuilder.append("-");
-        strBuilder.append("+\n");
+        strBuilder.append("+");
+        strBuilder.append(System.lineSeparator());
 
         return strBuilder.toString();
     }

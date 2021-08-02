@@ -16,33 +16,48 @@ public class RuleParser {
 
         for (String andRule : andRules) {
             predicate = predicate.and(
-                    getSubPredicate(andRule)
+                    getOrPredicate(andRule)
             );
         }
 
         return predicate;
     }
 
-    private static Predicate<Animal> getSubPredicate(String subRule) {
+    /**
+     * Parses rules with logical OR connection.
+     * RULE_1 || RULE_2
+     *
+     * @param orRule String with OR rules to parse.
+     * @return Predicate combining a set of predicates with OR connection.
+     */
+    private static Predicate<Animal> getOrPredicate(String orRule) {
 
-        Predicate<Animal> subPredicate = x -> false;
+        Predicate<Animal> orPredicate = x -> false;
 
-        String[] basicRules = subRule.split("\\|\\|");
-        for (String basicRule : basicRules) {
-            subPredicate = subPredicate.or(getBasicPredicate(basicRule));
+        String[] atomicRules = orRule.split("\\|\\|");
+        for (String atomicRule : atomicRules) {
+            orPredicate = orPredicate.or(getAtomicPredicate(atomicRule));
         }
 
-        return subPredicate;
+        return orPredicate;
     }
 
-    private static Predicate<Animal> getBasicPredicate(String basicRule) {
+    /**
+     * Parses atomic rules.
+     * ATTRIBUTE_NAME -> must contain that attribute
+     * !ATTRIBUTE_NAME -> must not contain that attribute
+     *
+     * @param atomicRule Atomic rule checking for presence or absence of an attribute.
+     * @return Predicate testing for presence or absence of the specified attribute.
+     */
+    private static Predicate<Animal> getAtomicPredicate(String atomicRule) {
 
-        Predicate<Animal> basicPredicate =
-                animal -> isNegated(basicRule) ?
-                            animal.lacksCharacteristic(basicRule.substring(1)) :
-                            animal.hasCharacteristic(basicRule);
+        Predicate<Animal> atomicPredicate =
+                animal -> isNegated(atomicRule) ?
+                            animal.lacksCharacteristic(atomicRule.substring(1)) :
+                            animal.hasCharacteristic(atomicRule);
 
-        return basicPredicate;
+        return atomicPredicate;
     }
 
     private static boolean isNegated(String token) {

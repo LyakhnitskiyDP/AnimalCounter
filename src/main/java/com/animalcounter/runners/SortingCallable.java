@@ -1,18 +1,17 @@
 package com.animalcounter.runners;
 
 import com.animalcounter.configs.AppConfigs;
-import com.animalcounter.consumers.ConsoleConsumer;
 import com.animalcounter.entities.Animal;
 import com.animalcounter.filters.ConcurrentAnimalFilterImpl;
 import com.animalcounter.parsers.AnimalParser;
-import com.animalcounter.parsers.RuleParser;
 import com.animalcounter.utils.CollectionUtil;
 import com.animalcounter.utils.FileUtil;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,33 +20,35 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 @RequiredArgsConstructor
+@Builder
 public class SortingCallable implements Callable<Map<String, Integer>> {
 
-    private static final Logger log = LoggerFactory.getLogger(SortingCallable.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(SortingCallable.class);
 
     private static final int BUFFER_SIZE = 250_000;
 
-    private final int offset;
-
-    private final int workloadSize;
+    private final Workload workload;
 
     private final AppConfigs appConfigs;
+
+    private final Map<String, Predicate<Animal>> animalPredicates;
 
     @Override
     public Map<String, Integer> call() {
 
         ConcurrentAnimalFilterImpl animalFilter =
-                new ConcurrentAnimalFilterImpl(initAnimalPredicates(appConfigs));
+                new ConcurrentAnimalFilterImpl(animalPredicates);
 
         int animalsFiltered = 0;
 
         Map<String, Integer> result = new HashMap<>();
 
-        while (animalsFiltered < workloadSize) {
+        while (animalsFiltered < workload.size) {
 
-            List<Animal> animals = initAnimals(appConfigs, offset + animalsFiltered);
+            List<Animal> animals = initAnimals(appConfigs, workload.offSet + animalsFiltered);
 
-            log.info("{} is sorting {} animals", Thread.currentThread().getName(), animals.size());
+            log.info("This thread is sorting {} animals", animals.size());
 
             if (animals.size() == 0) break;
 
@@ -57,7 +58,6 @@ public class SortingCallable implements Callable<Map<String, Integer>> {
 
             animalsFiltered += animals.size();
         }
-        result.forEach((k, v) -> System.out.println("key: " + k + " value: " + v));
 
         return result;
     }
@@ -69,22 +69,20 @@ public class SortingCallable implements Callable<Map<String, Integer>> {
 
         new FileUtil(pathToAnimalFile).readFile(
                 line -> animals.add(AnimalParser.parseString(line)),
-                new FileUtil.Page(offset, Math.min(workloadSize, BUFFER_SIZE))
+                new FileUtil.Page(offset, Math.min(workload.size, BUFFER_SIZE))
         );
 
         return animals;
     }
 
-    private Map<String, Predicate<Animal>> initAnimalPredicates(AppConfigs appConfigs) {
+    @RequiredArgsConstructor
+    @Getter
+    public static class Workload {
 
-        String pathToRules = appConfigs.getConfigFor(AppConfigs.PATH_TO_RULE_FILE);
-        Map<String, Predicate<Animal>> predicates = new HashMap<>();
+        private final int offSet;
 
-        new FileUtil(pathToRules).readFile(
-                line -> predicates.put(line, RuleParser.getPredicate(line))
-        );
+        private final int size;
 
-        return predicates;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.animalcounter.utils;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FileUtil {
 
@@ -76,9 +74,7 @@ public class FileUtil {
         }
     }
 
-    private boolean pageIsFull(Page page, int lineCounter) {
-        return !(lineCounter < page.size);
-    }
+
 
     public int countLines() {
 
@@ -127,6 +123,10 @@ public class FileUtil {
         private final int offSet;
         private final int size;
 
+    }
+
+    private boolean pageIsFull(Page page, int lineCounter) {
+        return !(lineCounter < page.size);
     }
 
 }
