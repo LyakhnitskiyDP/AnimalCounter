@@ -6,8 +6,7 @@ import com.animalcounter.entities.Animal;
 import com.animalcounter.parsers.RuleParser;
 import com.animalcounter.utils.CollectionUtil;
 import com.animalcounter.utils.FileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +24,8 @@ import java.util.function.Predicate;
  *
  * @see AppRunner
  */
+@Slf4j
 public class ConcurrentBufferedAppRunner implements Runner {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(ConcurrentBufferedAppRunner.class);
 
     private  final AppConfigs appConfigs;
 

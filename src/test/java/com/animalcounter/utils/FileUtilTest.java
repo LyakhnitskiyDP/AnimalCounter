@@ -16,28 +16,26 @@ public class FileUtilTest {
     private static final String[] PATH_TO_TEST_TXT_FILE =
             {"src", "test", "resources", "testTextFile.txt"};
 
-    private static String absolutePathToTestTxtFile;
+    private static String pathToTestTxtFile;
 
     @BeforeAll
     public static void setup() {
 
         StringBuilder pathBuilder = new StringBuilder();
-        pathBuilder.append(System.getProperty("user.dir"));
-        pathBuilder.append(File.separator);
         pathBuilder.append(
                 Arrays.stream(PATH_TO_TEST_TXT_FILE)
                       .map(e -> e + File.separator)
                       .collect(Collectors.joining())
         );
 
-        absolutePathToTestTxtFile = pathBuilder.toString();
+        pathToTestTxtFile = pathBuilder.toString();
     }
 
     @Test
     public void should_read_file_with_one_page() {
 
-        FileUtil fileUtil = new FileUtil(absolutePathToTestTxtFile);
-        FileUtil.Page page = new FileUtil.Page(1, 5);
+        FileUtil fileUtil = new FileUtil(pathToTestTxtFile);
+        FileUtil.Page page = new FileUtil.Page(2, 5);
 
         StringBuilder readingResult = new StringBuilder();
 
@@ -46,7 +44,18 @@ public class FileUtilTest {
                 page
         );
 
-        Assertions.assertEquals("23456", readingResult.toString());
+        Assertions.assertEquals("34567", readingResult.toString());
+    }
+
+    @Test
+    public void should_count_lines_in_file() {
+
+        FileUtil fileUtil = new FileUtil(pathToTestTxtFile);
+
+        int expectedNumberOfLines = 10;
+        int actualNumberOfLines = fileUtil.countLines();
+
+        Assertions.assertEquals(expectedNumberOfLines, actualNumberOfLines);
     }
 
 

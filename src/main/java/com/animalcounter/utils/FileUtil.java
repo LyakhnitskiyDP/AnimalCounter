@@ -1,107 +1,67 @@
 package com.animalcounter.utils;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.LineNumberReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
+@Slf4j
+@RequiredArgsConstructor
 public class FileUtil {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(FileUtil.class);
 
     private final String pathToFile;
 
-    public FileUtil(String pathToFile) {
-
-        this.pathToFile = pathToFile;
-    }
-
     public void readFile(Consumer<String> callback) {
 
-        try (
-                FileReader fileReader = new FileReader(pathToFile);
-                BufferedReader reader = new BufferedReader(fileReader)
-        ) {
+        try (Stream<String> lines = getLineStream()) {
 
-            String line;
+            lines.forEach(callback);
 
-            while ((line = reader.readLine()) != null) {
-                callback.accept(line);
-            }
-
-        } catch (FileNotFoundException e) {
-
-            log.error("Cannot find file with path: {}", pathToFile, e);
         } catch (IOException e) {
-
             log.error("Exception while IO operation", e);
         }
+
     }
 
     public void readFile(Consumer<String> callback, Page page) {
 
-        try (
-                FileReader fileReader = new FileReader(pathToFile);
-                BufferedReader reader = new BufferedReader(fileReader)
-        ) {
+        try (Stream<String> lines = getLineStream()) {
 
-            String line;
+            lines.skip(page.offSet)
+                 .limit(page.size)
+                 .forEach(callback);
 
-            for (int i = 0; i < page.offSet; i++) reader.readLine();
-
-            int lineCounter = 0;
-
-            while ((line = reader.readLine()) != null && !pageIsFull(page, lineCounter)) {
-                callback.accept(line);
-                lineCounter++;
-            }
-
-        } catch (FileNotFoundException e) {
-
-            log.error("Cannot find file with path: {}", pathToFile, e);
         } catch (IOException e) {
-
             log.error("Exception while IO operation", e);
         }
     }
 
-
-
     public int countLines() {
 
-        int lines = 0;
+        try (Stream<String> lines = getLineStream()) {
 
-        try (
-                FileReader fileReader = new FileReader(pathToFile);
-                LineNumberReader reader = new LineNumberReader(fileReader)
-        ) {
-            while (reader.readLine() != null);
+            return (int) lines.count();
 
-            lines = reader.getLineNumber();
-        } catch (FileNotFoundException e) {
-
-            log.error("Cannot find file with path: {}", pathToFile, e);
         } catch (IOException e) {
-
             log.error("Exception while IO operation", e);
+            throw new RuntimeException(e);
         }
-
-        return lines;
     }
 
     public void writeToFile(String content) {
 
+        Path pathToFile = Paths.get(this.pathToFile);
+
         try (
-                FileWriter fileWriter = new FileWriter(pathToFile, true);
+                FileWriter fileWriter = new FileWriter(pathToFile.toFile(), true);
                 BufferedWriter writer = new BufferedWriter(fileWriter)
         ) {
 
@@ -110,11 +70,20 @@ public class FileUtil {
         } catch (FileNotFoundException e) {
 
             log.error("Cannot find file with path: {}", pathToFile, e);
+            throw new RuntimeException(e);
         } catch (IOException e) {
 
             log.error("Exception while IO operation", e);
+            throw new RuntimeException(e);
         }
 
+    }
+
+    public Stream<String> getLineStream() throws IOException{
+
+        Path pathToFile = Paths.get(this.pathToFile);
+
+        return Files.lines(pathToFile);
     }
 
     @RequiredArgsConstructor
@@ -123,10 +92,6 @@ public class FileUtil {
         private final int offSet;
         private final int size;
 
-    }
-
-    private boolean pageIsFull(Page page, int lineCounter) {
-        return !(lineCounter < page.size);
     }
 
 }
