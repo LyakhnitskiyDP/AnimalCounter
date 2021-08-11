@@ -18,11 +18,7 @@ public class AnimalParserTest {
 
         Animal animalToTest = AnimalParser.parseString(csv);
 
-        Animal expectedAnimal = new Animal(new String[]{
-                "ЛЕГКОЕ",
-                "МАЛЕНЬКОЕ",
-                "ВСЕЯДНОЕ"
-        });
+        Animal expectedAnimal = new Animal("ЛЕГКОЕ", "МАЛЕНЬКОЕ", "ВСЕЯДНОЕ");
 
         Assertions.assertThat(
                expectedAnimal.getCharacteristics()
