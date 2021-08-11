@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ArgumentParserTest {
 
-
     @Test
     public void should_throw_exception_on_unknown_argument() {
 

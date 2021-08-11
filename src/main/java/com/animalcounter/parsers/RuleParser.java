@@ -30,7 +30,7 @@ public class RuleParser {
      * @param orRule String with OR rules to parse.
      * @return Predicate combining a set of predicates with OR connection.
      */
-    private static Predicate<Animal> getOrPredicate(String orRule) {
+    static Predicate<Animal> getOrPredicate(String orRule) {
 
         Predicate<Animal> orPredicate = x -> false;
 
@@ -50,17 +50,14 @@ public class RuleParser {
      * @param atomicRule Atomic rule checking for presence or absence of an attribute.
      * @return Predicate testing for presence or absence of the specified attribute.
      */
-    private static Predicate<Animal> getAtomicPredicate(String atomicRule) {
+    static Predicate<Animal> getAtomicPredicate(String atomicRule) {
 
-        Predicate<Animal> atomicPredicate =
-                animal -> isNegated(atomicRule) ?
+        return animal -> isNegated(atomicRule) ?
                             animal.lacksCharacteristic(atomicRule.substring(1)) :
                             animal.hasCharacteristic(atomicRule);
-
-        return atomicPredicate;
     }
 
-    private static boolean isNegated(String token) {
+    static boolean isNegated(String token) {
         return token.startsWith(LOGICAL_NOT);
     }
 

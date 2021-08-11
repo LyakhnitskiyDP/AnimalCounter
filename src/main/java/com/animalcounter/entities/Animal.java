@@ -1,22 +1,24 @@
 package com.animalcounter.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.Arrays;
 
 @Data
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class Animal {
 
-    private Set<String> characteristics;
+    private String[] characteristics;
 
-    public boolean hasCharacteristic(String characteristic) {
-        return this.characteristics.contains(characteristic);
+
+    public Animal(String...characteristics) {
+
+        this.characteristics = characteristics;
+    }
+
+    public boolean hasCharacteristic(String characteristicToCheck) {
+        return Arrays.asList(characteristics).contains(characteristicToCheck);
     }
 
     public boolean lacksCharacteristic(String characteristic) {

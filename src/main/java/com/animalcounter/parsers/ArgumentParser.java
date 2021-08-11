@@ -20,8 +20,6 @@ public class ArgumentParser {
 
                 case "-generate" -> configMap.put(AppConfigs.GENERATION_NUMBER, args[++i]);
 
-                case "-multithreaded" -> configMap.put(AppConfigs.CONCURRENT_MODE, "true");
-
                 default -> throw new IllegalArgumentException("Unknown argument " + args[i]);
             }
         }

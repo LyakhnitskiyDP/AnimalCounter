@@ -2,20 +2,17 @@ package com.animalcounter;
 
 import com.animalcounter.configs.AppConfigs;
 import com.animalcounter.parsers.ArgumentParser;
-import com.animalcounter.runners.BufferedAppRunner;
 import com.animalcounter.runners.ConcurrentBufferedAppRunner;
 import com.animalcounter.runners.GenerationRunner;
 import com.animalcounter.runners.MetricProxyRunner;
 import com.animalcounter.runners.Runner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Consumer;
 
 
+@Slf4j
 public class App {
-
-    private static final Logger log = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
 
@@ -39,13 +36,7 @@ public class App {
 
     private static void runSortingApp(AppConfigs appConfigs) {
 
-        Runner sortingAppRunner;
-
-        if (appConfigs.hasConfigFor(AppConfigs.CONCURRENT_MODE)) {
-            sortingAppRunner = new ConcurrentBufferedAppRunner(appConfigs);
-        } else {
-            sortingAppRunner = new BufferedAppRunner(appConfigs);
-        }
+        Runner sortingAppRunner = new ConcurrentBufferedAppRunner(appConfigs);
 
         Consumer<Long> metricsConsumer =
                 timePassed -> log.info("Time of sorting app execution: {}ms", timePassed);

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class AnimalParserTest {
@@ -18,16 +18,16 @@ public class AnimalParserTest {
 
         Animal animalToTest = AnimalParser.parseString(csv);
 
-        Animal expectedAnimal = new Animal(Set.of(
+        Animal expectedAnimal = new Animal(new String[]{
                 "ЛЕГКОЕ",
                 "МАЛЕНЬКОЕ",
                 "ВСЕЯДНОЕ"
-        ));
+        });
 
         Assertions.assertThat(
                expectedAnimal.getCharacteristics()
         ).containsExactlyInAnyOrderElementsOf(
-                animalToTest.getCharacteristics()
+                List.of(animalToTest.getCharacteristics())
         );
     }
 

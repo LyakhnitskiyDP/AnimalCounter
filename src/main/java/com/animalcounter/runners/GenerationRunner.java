@@ -63,13 +63,15 @@ public class GenerationRunner implements Runner {
             StringBuilder animalsStrBuilder = new StringBuilder();
 
             for (int i = 0; i < number; i++) {
-
-                animalsStrBuilder.append(getRandomElement(WEIGHT));
-                animalsStrBuilder.append(",");
-                animalsStrBuilder.append(getRandomElement(HEIGHT));
-                animalsStrBuilder.append(",");
-                animalsStrBuilder.append(getRandomElement(TYPE));
-                animalsStrBuilder.append("\n");
+                animalsStrBuilder.append(
+                        String.format(
+                                "%s,%s,%s%s",
+                                getRandomElement(WEIGHT),
+                                getRandomElement(HEIGHT),
+                                getRandomElement(TYPE),
+                                System.lineSeparator()
+                        )
+                );
             }
 
             return animalsStrBuilder.toString();
