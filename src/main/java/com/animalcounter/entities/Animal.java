@@ -1,20 +1,11 @@
 package com.animalcounter.entities;
 
-import lombok.Data;
-import lombok.ToString;
-
 import java.util.Arrays;
 
-@Data
-@ToString
-public class Animal {
+public record Animal(String...characteristics) {
 
-    private String[] characteristics;
-
-
-    public Animal(String...characteristics) {
-
-        this.characteristics = characteristics;
+    public String[] getCharacteristics() {
+        return this.characteristics;
     }
 
     public boolean hasCharacteristic(String characteristicToCheck) {
